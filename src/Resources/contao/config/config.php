@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [ 'Alnv\CatalogManagerBidExtensionBundle\Contao\Inserttag', 'parse' ];
+$GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [ 'Alnv\CatalogManagerAuctionExtensionBundle\Contao\Inserttag', 'parse' ];
 
 array_insert( $GLOBALS['NOTIFICATION_CENTER']['NOTIFICATION_TYPE']['catalog_manager'], 0, [
 

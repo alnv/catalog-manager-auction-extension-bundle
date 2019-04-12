@@ -1,10 +1,10 @@
 <?php
 
-namespace Alnv\CatalogManagerBidExtensionBundle\Contao;
+namespace Alnv\CatalogManagerAuctionExtensionBundle\Contao;
 
 
-use Alnv\CatalogManagerBidExtensionBundle\Views\ListView;
-use Alnv\CatalogManagerBidExtensionBundle\Views\FormView;
+use Alnv\CatalogManagerAuctionExtensionBundle\Views\ListView;
+use Alnv\CatalogManagerAuctionExtensionBundle\Views\FormView;
 
 
 class Inserttag {

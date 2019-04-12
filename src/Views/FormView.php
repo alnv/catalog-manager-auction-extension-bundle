@@ -1,6 +1,6 @@
 <?php
 
-namespace Alnv\CatalogManagerBidExtensionBundle\Views;
+namespace Alnv\CatalogManagerAuctionExtensionBundle\Views;
 
 
 class FormView {

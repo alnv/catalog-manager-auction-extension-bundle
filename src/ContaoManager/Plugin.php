@@ -1,6 +1,6 @@
 <?php
 
-namespace Alnv\CatalogManagerBidExtensionBundle\ContaoManager;
+namespace Alnv\CatalogManagerAuctionExtensionBundle\ContaoManager;
 
 use Symfony\Component\HttpKernel\KernelInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
@@ -17,9 +17,9 @@ class Plugin implements BundlePluginInterface, RoutingPluginInterface {
 
         return [
 
-            BundleConfig::create('Alnv\CatalogManagerBidExtensionBundle\AlnvCatalogManagerBidExtensionBundle')
+            BundleConfig::create('Alnv\CatalogManagerAuctionExtensionBundle\AlnvCatalogManagerAuctionExtensionBundle')
                 ->setLoadAfter(['Contao\CoreBundle\ContaoCoreBundle', 'catalog-manager'])
-                ->setReplace(['catalog-manager-bid-extension-bundle']),
+                ->setReplace(['catalog-manager-auction-extension-bundle']),
         ];
     }
 

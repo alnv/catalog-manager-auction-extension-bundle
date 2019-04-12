@@ -1,6 +1,6 @@
 <?php
 
-namespace Alnv\CatalogManagerBidExtensionBundle\Controller;
+namespace Alnv\CatalogManagerAuctionExtensionBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
  *
  * @Route("/bid-api", defaults={"_scope" = "frontend", "_token_check" = false})
  */
-class BidController extends Controller {
+class AuctionController extends Controller {
 
 
     /**

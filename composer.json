@@ -1,10 +1,10 @@
 {
-  "name": "alnv/catalog-manager-bid-extension-bundle",
+  "name": "alnv/catalog-manager-auction-extension-bundle",
   "type": "contao-bundle",
   "license": "LGPL-3.0-or-later",
   "autoload": {
     "psr-4": {
-      "Alnv\\CatalogManagerBidExtensionBundle\\": "src/"
+      "Alnv\\CatalogManagerAuctionExtensionBundle\\": "src/"
     },
     "classmap": [
       "src/Resources/contao/"
@@ -28,9 +28,9 @@
   "extra": {
     "contao": {
       "sources": {
-        "": "system/modules/catalog-manager-bid-extension-bundle"
+        "": "system/modules/catalog-manager-auction-extension-bundle"
       }
     },
-    "contao-manager-plugin": "Alnv\\CatalogManagerBidExtensionBundle\\ContaoManager\\Plugin"
+    "contao-manager-plugin": "Alnv\\CatalogManagerAuctionExtensionBundle\\ContaoManager\\Plugin"
   }
 }
