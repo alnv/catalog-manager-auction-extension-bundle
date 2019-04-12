@@ -1,0 +1,6 @@
+<div class="ce_auction_form block" id="auction_list_id_<?= $this->id ?>"></div>
+<script defer>
+    document.addEventListener( 'DOMContentLoaded', function () {
+        getAuctionViewList( "<?= $this->id ?>", "<?= $this->table ?>" );
+    });
+</script>

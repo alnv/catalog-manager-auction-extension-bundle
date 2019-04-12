@@ -1,6 +1,0 @@
-<div class="ce_bid_form block" id="bid_list_id_<?= $this->id ?>"></div>
-<script defer>
-    document.addEventListener( 'DOMContentLoaded', function () {
-        getBidViewList( "<?= $this->id ?>", "<?= $this->table ?>" );
-    });
-</script>

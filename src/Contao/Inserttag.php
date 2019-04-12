@@ -14,7 +14,7 @@ class Inserttag {
 
         $arrInserttag = explode( '::',  $strInserttag );
 
-        if ( $arrInserttag[0] == 'bid_form_view' ) {
+        if ( $arrInserttag[0] == 'auction_form_view' ) {
 
             $strTablename = $arrInserttag[1];
             $strId = $arrInserttag[2];
@@ -30,7 +30,7 @@ class Inserttag {
         }
 
 
-        if ( $arrInserttag[0] == 'bid_list_view' ) {
+        if ( $arrInserttag[0] == 'auction_list_view' ) {
 
             $strTablename = $arrInserttag[1];
             $strId = $arrInserttag[2];
@@ -45,7 +45,7 @@ class Inserttag {
             return $objListView->parse();
         }
 
-        if ( $arrInserttag[0] == 'bid_user' ) {
+        if ( $arrInserttag[0] == 'auction_user' ) {
 
             $objDatabase = \Database::getInstance();
 

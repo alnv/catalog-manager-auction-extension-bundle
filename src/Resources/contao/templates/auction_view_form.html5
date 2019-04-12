@@ -1,12 +1,12 @@
-<div class="ce_bid_form block" id="bid_form_id_<?= $this->id ?>">
+<div class="ce_auction_form block" id="auction_form_id_<?= $this->id ?>">
     <form>
         <input type="hidden" name="id" value="<?= $this->id ?>">
         <input type="hidden" name="table" value="<?= $this->table ?>">
         <div class="widget widget-text">
-            <input type="text" name="bid_value" value="" placeholder="Geben Sie Ihr Gebot ein">
+            <input type="text" name="auction_value" value="" placeholder="Geben Sie Ihr Gebot ein">
         </div>
         <div class="widget widget-submit">
-            <button id="bid-submit" class="submit">Bieten</button>
+            <button id="auction-submit" class="submit">Bieten</button>
         </div>
     </form>
 </div>

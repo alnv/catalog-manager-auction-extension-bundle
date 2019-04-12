@@ -19,7 +19,7 @@ class FormView {
 
     public function parse() {
 
-        $objTemplate = new \FrontendTemplate( 'bid_view_form' );
+        $objTemplate = new \FrontendTemplate( 'auction_view_form' );
 
         $objTemplate->id = $this->strId;
         $objTemplate->table = $this->strTable;

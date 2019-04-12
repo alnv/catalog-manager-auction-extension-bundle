@@ -9,14 +9,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 /**
  *
- * @Route("/bid-api", defaults={"_scope" = "frontend", "_token_check" = false})
+ * @Route("/auction-api", defaults={"_scope" = "frontend", "_token_check" = false})
  */
 class AuctionController extends Controller {
 
 
     /**
      *
-     * @Route("/create", name="create-bid")
+     * @Route("/create", name="create-auction")
      * @Method({"POST"})
      */
     public function create() {
@@ -28,7 +28,7 @@ class AuctionController extends Controller {
         $strId = \Input::post('id');
         $strTable = \Input::post('table');
         $objDatabase = \Database::getInstance();
-        $floValue = (float) \Input::post('bid_value');
+        $floValue = (float) \Input::post('auction_value');
         $arrResponse = [ 'state' => false, 'message' => '', 'domId' => \Input::post('dom_id'), 'id' => $strId, 'table' => $strTable ];
 
         if ( !$objDatabase->tableExists( $strTable ) ) {
@@ -103,10 +103,10 @@ class AuctionController extends Controller {
             $arrResponse['message'] = $GLOBALS['TL_LANG']['MSC']['successMessage'];
         }
 
-        if ( \Config::get( 'bid_success_notification_id' ) && $objDatabase->tableExists( 'tl_nc_notification' ) ) {
+        if ( \Config::get( 'auction_success_notification_id' ) && $objDatabase->tableExists( 'tl_nc_notification' ) ) {
 
             $arrTokens = $this->generateTokens( $strId, $strTable );
-            $objNotification = \NotificationCenter\Model\Notification::findByPk( \Config::get( 'bid_success_notification_id' ) );
+            $objNotification = \NotificationCenter\Model\Notification::findByPk( \Config::get( 'auction_success_notification_id' ) );
 
             if ( null !== $objNotification ) {
 
@@ -120,7 +120,7 @@ class AuctionController extends Controller {
 
     /**
      *
-     * @Route("/all", name="all-bids")
+     * @Route("/all", name="all-auction")
      * @Method({"GET"})
      */
     public function all() {

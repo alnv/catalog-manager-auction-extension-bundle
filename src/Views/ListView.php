@@ -19,7 +19,7 @@ class ListView {
 
     public function parse() {
 
-        $objTemplate = new \FrontendTemplate( 'bid_view_list' );
+        $objTemplate = new \FrontendTemplate( 'auction_view_list' );
 
         $objTemplate->id = $this->strId;
         $objTemplate->table = $this->strTable;

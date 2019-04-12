@@ -1,5 +1,5 @@
 <script>
-    var getBidViewList = function ( strId, strTable ) {
+    var getAuctionViewList = function ( strId, strTable ) {
 
         var objXHttp = new XMLHttpRequest();
 
@@ -9,7 +9,7 @@
 
                 if ( this.responseText ) {
 
-                    var objList = document.getElementById( 'bid_list_id_' + strId );
+                    var objList = document.getElementById( 'auction_list_id_' + strId );
                     var objResponse = JSON.parse( this.responseText );
 
                     if ( !objResponse.empty ) {
@@ -40,7 +40,7 @@
             }
         };
 
-        objXHttp.open( 'GET', 'bid-api/all?id=' + strId + '&table=' + strTable, true );
+        objXHttp.open( 'GET', 'auction-api/all?id=' + strId + '&table=' + strTable, true );
         objXHttp.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
         objXHttp.send();
     }
@@ -48,7 +48,7 @@
 <script defer>
     document.addEventListener( 'DOMContentLoaded', function () {
 
-        var arrForms = document.querySelectorAll('.ce_bid_form');
+        var arrForms = document.querySelectorAll('.ce_auction_form');
 
         if ( !arrForms.length ) {
 
@@ -64,7 +64,7 @@
                 continue;
             }
 
-            var objButton = objForm.querySelector('#bid-submit');
+            var objButton = objForm.querySelector('#auction-submit');
 
             objButton.addEventListener('click', function ( objEvent ) {
 
@@ -75,7 +75,7 @@
                     id: this.form.id.value,
                     table: this.form.table.value,
                     dom_id: this.form.parentNode.id,
-                    bid_value: this.form.bid_value.value
+                    auction_value: this.form.auction_value.value
                 };
 
                 var objXHttp = new XMLHttpRequest();
@@ -107,7 +107,7 @@
                                     objMessage = objCeForm.querySelector('.message');
                                     objMessage.innerHTML = '<p>' + objResponse.message + '</p>';
 
-                                    getBidViewList( objResponse.id, objResponse.table );
+                                    getAuctionViewList( objResponse.id, objResponse.table );
                                 }
                             }
 
@@ -120,11 +120,11 @@
                     }
                 };
                 
-                objXHttp.open( 'POST', 'bid-api/create', true );
+                objXHttp.open( 'POST', 'auction-api/create', true );
                 objXHttp.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
                 objXHttp.send( parseParameter( objPost ) );
 
-                this.form.bid_value.value = '';
+                this.form.auction_value.value = '';
 
                 return false;
 
