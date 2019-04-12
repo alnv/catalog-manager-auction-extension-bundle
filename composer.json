@@ -1,0 +1,36 @@
+{
+  "name": "alnv/catalog-manager-bid-extension-bundle",
+  "type": "contao-bundle",
+  "license": "LGPL-3.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "Alnv\\CatalogManagerBidExtensionBundle\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/config/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+  "require": {
+    "php":">=7.1",
+    "contao/core-bundle": "^4.4",
+    "alnv/catalog-manager": "^1.30",
+    "symfony/framework-bundle": "3.4.* || 4.1.*"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "extra": {
+    "contao": {
+      "sources": {
+        "": "system/modules/catalog-manager-bid-extension-bundle"
+      }
+    },
+    "contao-manager-plugin": "Alnv\\CatalogManagerBidExtensionBundle\\ContaoManager\\Plugin"
+  }
+}

@@ -1,0 +1,142 @@
+<script>
+    var getBidViewList = function ( strId, strTable ) {
+
+        var objXHttp = new XMLHttpRequest();
+
+        objXHttp.onreadystatechange = function() {
+
+            if (this.readyState === 4 && this.status === 200) {
+
+                if ( this.responseText ) {
+
+                    var objList = document.getElementById( 'bid_list_id_' + strId );
+                    var objResponse = JSON.parse( this.responseText );
+
+                    if ( !objResponse.empty ) {
+
+                        var strTemplate = '<div class="offer_list"><div class="offer_list_wrapper">';
+
+                        for ( var i = 0; i < objResponse.data.length; i++ ) {
+
+                            var objData = objResponse.data[i];
+
+                            strTemplate +=
+                                '<div class="offer_item">' +
+                                    '<p class="date">'+ objData['date'] +'</p>'+
+                                    '<p class="value">'+ objData['value'] +'</p>'+
+                                '</div>'
+                        }
+
+                        strTemplate += '</div></div>';
+
+                        objList.innerHTML = strTemplate;
+                    }
+
+                    else {
+
+                        objList.innerHTML = '<p class="empty">' + objResponse.message + '</p>';
+                    }
+                }
+            }
+        };
+
+        objXHttp.open( 'GET', 'bid-api/all?id=' + strId + '&table=' + strTable, true );
+        objXHttp.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+        objXHttp.send();
+    }
+</script>
+<script defer>
+    document.addEventListener( 'DOMContentLoaded', function () {
+
+        var arrForms = document.querySelectorAll('.ce_bid_form');
+
+        if ( !arrForms.length ) {
+
+            return null;
+        }
+
+        for ( var i = 0; i < arrForms.length; i++ ) {
+
+            var objForm = arrForms[i].querySelector('form');
+
+            if ( !objForm ) {
+
+                continue;
+            }
+
+            var objButton = objForm.querySelector('#bid-submit');
+
+            objButton.addEventListener('click', function ( objEvent ) {
+
+                objEvent.preventDefault();
+
+                var objPost = {
+
+                    id: this.form.id.value,
+                    table: this.form.table.value,
+                    dom_id: this.form.parentNode.id,
+                    bid_value: this.form.bid_value.value
+                };
+
+                var objXHttp = new XMLHttpRequest();
+
+                objXHttp.onreadystatechange = function() {
+
+                    if (this.readyState === 4 && this.status === 200) {
+
+                        if ( this.responseText ) {
+
+                            var objResponse = JSON.parse( this.responseText );
+                            var objCeForm = document.querySelector( '#' + objResponse.domId );
+
+                            if ( objResponse.message ) {
+
+                                var objForm = objCeForm.querySelector( 'form' );
+                                var objMessage = objForm.querySelector('.message');
+
+                                if ( !objMessage ) {
+
+                                    var objEmptyDiv = document.createElement('div');
+                                        objEmptyDiv.innerHTML = '<div class="message '+ ( objResponse.state ? ' success' : 'error' ) +'"></div>';
+
+                                    while ( objEmptyDiv.firstChild ) {
+
+                                        objCeForm.insertBefore( objEmptyDiv.firstChild, objForm );
+                                    }
+
+                                    objMessage = objCeForm.querySelector('.message');
+                                    objMessage.innerHTML = '<p>' + objResponse.message + '</p>';
+
+                                    getBidViewList( objResponse.id, objResponse.table );
+                                }
+                            }
+
+                            setTimeout( function () {
+
+                                objCeForm.querySelector('.message').remove();
+
+                            }, 10000 )
+                        }
+                    }
+                };
+                
+                objXHttp.open( 'POST', 'bid-api/create', true );
+                objXHttp.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+                objXHttp.send( parseParameter( objPost ) );
+
+                this.form.bid_value.value = '';
+
+                return false;
+
+            }, false );
+        }
+
+
+        function parseParameter( objData ) {
+
+            return Object.keys( objData ).map( function( strKeyname ) {
+                return strKeyname + '=' + objData[ strKeyname ]
+            }).join('&');
+        }
+    });
+</script>
