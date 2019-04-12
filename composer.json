@@ -20,7 +20,7 @@
     "php":">=7.1",
     "contao/core-bundle": "^4.4",
     "alnv/catalog-manager": "^1.30",
-    "symfony/framework-bundle": "3.4.* || 4.1.*"
+    "sensio/framework-extra-bundle": "^5.2"
   },
   "config": {
     "preferred-install": "dist"
