@@ -46,7 +46,7 @@ class AuctionController extends Controller {
         }
 
         $intWarningOffer = (int)$objEntity->waring_offer ?: 20;
-        $intMinOffer = $objEntity->min_offer ?: 100;
+        $intMinOffer = $objEntity->min_offer ?: 0;
 
         if ( $intMinOffer > $floValue ) {
 

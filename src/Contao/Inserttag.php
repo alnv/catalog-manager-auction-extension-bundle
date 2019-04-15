@@ -60,7 +60,7 @@ class Inserttag {
 
             if ( !$objEntities->numRows ) {
 
-                return '';
+                return '0';
             }
 
             while ( $objEntities->next() ) {
