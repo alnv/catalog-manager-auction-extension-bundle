@@ -50,10 +50,9 @@ class AuctionController extends Controller {
 
         if ( $intMinOffer > $floValue ) {
 
-            $arrResponse['message'] = sprintf( $GLOBALS['TL_LANG']['MSC']['minOfferMessage'], number_format( $intMinOffer, 2, ',', '.' ) );
+            $arrResponse['message'] = sprintf( $GLOBALS['TL_LANG']['MSC']['minOfferMessage'], number_format( $intMinOffer, 0, ',', '.' ) );
             $this->sendResponse( $arrResponse );
         }
-
 
         if ( !$objDatabase->tableExists( 'cm_offers' ) ) {
 
@@ -61,6 +60,7 @@ class AuctionController extends Controller {
             $this->sendResponse( $arrResponse );
         }
 
+        $blnUpdate = false;
         $intUserId = 0;
 
         if ( FE_USER_LOGGED_IN ) {
@@ -69,18 +69,20 @@ class AuctionController extends Controller {
             $intUserId = $objUser->id;
         }
 
-        if ( $intWarningOffer ) {
+        $objOfferEntity = $objDatabase->prepare( 'SELECT * FROM cm_offers WHERE member = ? AND offer_to = ? AND offer_object = ? ORDER BY tstamp DESC' )->limit(1)->execute( $intUserId, $strId, $strTable );
 
-            $objOfferEntity = $objDatabase->prepare( 'SELECT * FROM cm_offers WHERE member = ? AND offer_to = ? AND offer_object = ? ORDER BY tstamp DESC' )->limit(1)->execute( $intUserId, $strId, $strTable );
+        if ( $objOfferEntity->numRows ) {
 
-            if ( $objOfferEntity->numRows ) {
+            $floDiff = ( ( $floValue - (float) $objOfferEntity->offer_value ) / $floValue ) * 100;
 
-                $floDiff = ( ( $floValue - (float) $objOfferEntity->offer_value ) / $floValue ) * 100;
+            if ( $floDiff >=  $intWarningOffer ) {
 
-                if ( $floDiff >=  $intWarningOffer ) {
+                $arrResponse['message'] = sprintf( $GLOBALS['TL_LANG']['MSC']['warningMessage'], $intWarningOffer . '%' );
+            }
 
-                    $arrResponse['message'] = sprintf( $GLOBALS['TL_LANG']['MSC']['warningMessage'], $intWarningOffer . '%' );
-                }
+            if ( (float) $objOfferEntity->offer_value == $floValue ) {
+
+                $blnUpdate = true;
             }
         }
 
@@ -95,7 +97,19 @@ class AuctionController extends Controller {
             'title' => $objEntity->title ?: ''
         ];
 
-        $objDatabase->prepare( 'INSERT INTO cm_offers %s' )->set( $arrOffer )->execute();
+        if ( !$blnUpdate ) {
+
+            $objDatabase->prepare( 'INSERT INTO cm_offers %s' )->set( $arrOffer )->execute();
+        }
+
+        else {
+
+            unset( $arrOffer['title'] );
+            unset( $arrOffer['alias'] );
+
+            $objDatabase->prepare( 'UPDATE cm_offers %s WHERE id=?' )->set( $arrOffer )->execute( $objOfferEntity->id );
+        }
+
         $arrResponse['state'] = true;
 
         if ( !$arrResponse['message'] ) {
@@ -114,6 +128,43 @@ class AuctionController extends Controller {
             }
         }
 
+        $this->sendResponse( $arrResponse );
+    }
+
+
+    /**
+     *
+     * @Route("/delete", name="delete-auction")
+     * @Method({"POST"})
+     */
+    public function delete() {
+
+        $this->container->get( 'contao.framework' )->initialize();
+
+        \System::loadLanguageFile('default');
+
+        $intUserId = 0;
+        $strId = \Input::post('id');
+        $strTable = \Input::post('table');
+        $objDatabase = \Database::getInstance();
+        $arrResponse = [ 'state' => false, 'message' => '', 'domId' => \Input::post('dom_id'), 'id' => $strId, 'table' => $strTable ];
+
+        if ( FE_USER_LOGGED_IN ) {
+
+            $objUser = \FrontendUser::getInstance();
+            $intUserId = $objUser->id;
+        }
+
+        if ( !$strTable || !$strId ) {
+
+            $arrResponse['message'] = $GLOBALS['TL_LANG']['MSC']['errorMessage'];
+            $this->sendResponse( $arrResponse );
+        }
+
+        $arrResponse['state'] = true;
+        $arrResponse['message'] = $GLOBALS['TL_LANG']['MSC']['deleteMessage'] ?: '';
+
+        $objDatabase->prepare( 'DELETE FROM cm_offers WHERE member = ? AND offer_to = ? AND offer_object = ? ' )->execute( $intUserId, $strId, $strTable );
         $this->sendResponse( $arrResponse );
     }
 
@@ -153,7 +204,7 @@ class AuctionController extends Controller {
                 $objDate = new \Date( $objEntities->tstamp );
 
                 $arrRow['date'] = $objDate->datim;
-                $arrRow['value'] = number_format( (float) $arrRow['offer_value'], 2, ',', '.');
+                $arrRow['value'] = number_format( (float) $arrRow['offer_value'], 0, ',', '.');
                 $arrRow['offer'] = $this->getOfferObject( $objEntities->offer_to, $objEntities->offer_object );
 
                 $arrReturn['data'][] = $arrRow;
@@ -174,7 +225,6 @@ class AuctionController extends Controller {
     protected function sendResponse( $arrResponse ) {
 
         header( 'Content-Type: application/json' );
-
         echo json_encode( $arrResponse, 512 );
         exit;
     }
