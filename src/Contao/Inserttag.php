@@ -18,13 +18,14 @@ class Inserttag {
 
             $strTablename = $arrInserttag[1];
             $strId = $arrInserttag[2];
+            $arrOptions = $this->getOptions( $arrInserttag[3] );
 
             if (!$strTablename || !$strId) {
 
                 return '';
             }
 
-            $objFormView = new FormView($strTablename, $strId);
+            $objFormView = new FormView($strTablename, $strId, $arrOptions);
 
             return $objFormView->parse();
         }
@@ -75,5 +76,30 @@ class Inserttag {
         }
 
         return false;
+    }
+
+
+    protected function getOptions( $strOptions = null ) {
+
+        $arrReturn = [];
+
+        if ( !$strOptions ) {
+
+            return $arrReturn;
+        }
+
+        $arrChunks = explode('?', urldecode( $strOptions ), 2 );
+        $strSource = \StringUtil::decodeEntities( $arrChunks[1] );
+        $strSource = str_replace( '[&]', '&', $strSource );
+        $arrParams = explode( '&', $strSource );
+
+        foreach ( $arrParams as $strParam ) {
+
+            list( $strKey, $strOption ) = explode('=', $strParam);
+
+            $arrReturn[ $strKey ] = $strOption;
+        }
+
+        return $arrReturn;
     }
 }

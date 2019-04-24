@@ -7,13 +7,14 @@ class FormView {
 
 
     protected $strTable = null;
+    protected $arrOptions = [];
     protected $strId = null;
 
 
-    public function __construct( $strTablename, $strId ) {
-
+    public function __construct( $strTablename, $strId, $arrOptions = [] ) {
 
         $this->strTable = $strTablename;
+        $this->arrOptions = $arrOptions;
         $this->strId = $strId;
     }
 
@@ -39,7 +40,7 @@ class FormView {
 
         $objEntity = $objDatabase->prepare('SELECT * FROM cm_offers WHERE member = ? AND offer_to = ? AND offer_object = ? ORDER BY tstamp DESC')->limit(1)->execute( $intUserId, $this->strId, $this->strTable );
 
-        if ( $objEntity->numRows ) {
+        if ( $objEntity->numRows && ( !isset( $this->arrOptions['unsetDeleteButton'] ) || $this->arrOptions['unsetDeleteButton'] != '1' ) ) {
 
             $objTemplate->hasOffers = true;
         }
