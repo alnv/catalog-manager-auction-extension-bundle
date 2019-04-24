@@ -23,7 +23,7 @@
                             strTemplate +=
                                 '<div class="offer_item">' +
                                     '<p class="date">'+ objData['date'] +'</p>'+
-                                    '<p class="value">'+ objData['value'] +'</p>'+
+                                    '<p class="value">'+ objData['value'] +' EUR</p>'+
                                 '</div>'
                         }
 
@@ -64,9 +64,50 @@
                 continue;
             }
 
-            var objButton = objForm.querySelector('#auction-submit');
+            var objSubmit = objForm.querySelector('#auction-submit');
+            var objDelete = objForm.querySelector('#auction-delete');
 
-            objButton.addEventListener('click', function ( objEvent ) {
+            if ( objDelete ) {
+
+                objDelete.addEventListener('click', function ( objEvent ) {
+
+                    objEvent.preventDefault();
+
+                    var objDelete = {
+
+                        id: this.form.id.value,
+                        table: this.form.table.value,
+                        dom_id: this.form.parentNode.id
+                    };
+
+                    var objXHttp = new XMLHttpRequest();
+
+                    objXHttp.onreadystatechange = function() {
+
+                        if (this.readyState === 4 && this.status === 200) {
+
+                            if ( this.responseText ) {
+
+                                var objResponse = JSON.parse( this.responseText );
+                                var objCeForm = document.querySelector( '#' + objResponse.domId );
+
+                                if ( objResponse.message ) {
+
+                                    setMessage( objCeForm, objResponse );
+                                }
+                            }
+                        }
+                    };
+
+                    objXHttp.open( 'POST', 'auction-api/delete', true );
+                    objXHttp.setRequestHeader( 'Content-type', 'application/x-www-form-urlencoded' );
+                    objXHttp.send( parseParameter( objDelete ) );
+
+                    return false;
+                });
+            }
+
+            objSubmit.addEventListener('click', function ( objEvent ) {
 
                 objEvent.preventDefault();
 
@@ -91,31 +132,8 @@
 
                             if ( objResponse.message ) {
 
-                                var objForm = objCeForm.querySelector( 'form' );
-                                var objMessage = objForm.querySelector('.message');
-
-                                if ( !objMessage ) {
-
-                                    var objEmptyDiv = document.createElement('div');
-                                        objEmptyDiv.innerHTML = '<div class="message '+ ( objResponse.state ? ' success' : 'error' ) +'"></div>';
-
-                                    while ( objEmptyDiv.firstChild ) {
-
-                                        objCeForm.insertBefore( objEmptyDiv.firstChild, objForm );
-                                    }
-
-                                    objMessage = objCeForm.querySelector('.message');
-                                    objMessage.innerHTML = '<p>' + objResponse.message + '</p>';
-
-                                    getAuctionViewList( objResponse.id, objResponse.table );
-                                }
+                                setMessage( objCeForm, objResponse );
                             }
-
-                            setTimeout( function () {
-
-                                objCeForm.querySelector('.message').remove();
-
-                            }, 10000 )
                         }
                     }
                 };
@@ -129,6 +147,35 @@
                 return false;
 
             }, false );
+        }
+
+
+        function setMessage(objCeForm, objResponse) {
+
+            var objForm = objCeForm.querySelector( 'form' );
+            var objMessage = objForm.querySelector('.message');
+
+            if ( !objMessage ) {
+
+                var objEmptyDiv = document.createElement('div');
+                objEmptyDiv.innerHTML = '<div class="message '+ ( objResponse.state ? ' success' : 'error' ) +'"></div>';
+
+                while ( objEmptyDiv.firstChild ) {
+
+                    objCeForm.insertBefore( objEmptyDiv.firstChild, objForm );
+                }
+
+                objMessage = objCeForm.querySelector('.message');
+                objMessage.innerHTML = '<p>' + objResponse.message + '</p>';
+
+                getAuctionViewList( objResponse.id, objResponse.table );
+            }
+
+            setTimeout( function () {
+
+                objCeForm.querySelector('.message').remove();
+
+            }, 10000 )
         }
 
 
