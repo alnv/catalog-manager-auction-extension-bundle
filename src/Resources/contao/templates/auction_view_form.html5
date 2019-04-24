@@ -3,10 +3,15 @@
         <input type="hidden" name="id" value="<?= $this->id ?>">
         <input type="hidden" name="table" value="<?= $this->table ?>">
         <div class="widget widget-text">
-            <input type="text" name="auction_value" value="" placeholder="Geben Sie Ihr Gebot ein">
+            <input type="text" name="auction_value" value="" placeholder="<?= $this->pLabel ?>">
         </div>
+        <?php if ( $this->hasOffers ): ?>
+        <div class="widget widget-delete">
+            <button type="button" id="auction-delete" class="delete"><?= $this->dLabel ?></button>
+        </div>
+        <?php endif; ?>
         <div class="widget widget-submit">
-            <button id="auction-submit" class="submit">Bieten</button>
+            <button type="submit" id="auction-submit" class="submit"><?= $this->sLabel ?></button>
         </div>
     </form>
 </div>
